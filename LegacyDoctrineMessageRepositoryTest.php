@@ -2,25 +2,27 @@
 
 namespace EventSauce\MessageRepository\DoctrineV2MessageRepository;
 
+use EventSauce\EventSourcing\MessageRepository;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
+use EventSauce\IdEncoding\StringIdEncoder;
 use EventSauce\MessageRepository\TableSchema\LegacyTableSchema;
 use EventSauce\UuidEncoding\StringUuidEncoder;
 
 /**
  * @group doctrine2
  */
-class LegacyDoctrineUuidV4MessageRepositoryTest extends DoctrineMessageRepositoryTestCase
+class LegacyDoctrineMessageRepositoryTest extends DoctrineMessageRepositoryTestCase
 {
     protected string $tableName = 'legacy_domain_messages_uuid';
 
-    protected function messageRepository(): DoctrineUuidV4MessageRepository
+    protected function messageRepository(): MessageRepository
     {
-        return new DoctrineUuidV4MessageRepository(
+        return new DoctrineMessageRepository(
             connection: $this->connection,
             tableName: $this->tableName,
             serializer: new MySQL8DateFormatting(new ConstructingMessageSerializer()),
             tableSchema: new LegacyTableSchema(),
-            uuidEncoder: new StringUuidEncoder(),
+            aggregateRootIdEncoder: new StringIdEncoder(),
         );
     }
 }
